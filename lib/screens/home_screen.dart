@@ -5,7 +5,6 @@ import 'package:fluchat/pages/messages_page.dart';
 import 'package:fluchat/pages/notification_page.dart';
 import 'package:fluchat/screens/screen.dart';
 import 'package:fluchat/theme.dart';
-import 'package:fluchat/widgets/glowing_action_button.dart';
 import 'package:fluchat/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,9 +38,9 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: Theme.of(context).iconTheme,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        // iconTheme: Theme.of(context).iconTheme,
+        // backgroundColor: Colors.transparent,
+        // elevation: 0,
         title: ValueListenableBuilder(
           valueListenable: title,
           builder: (BuildContext context, String value, _) {

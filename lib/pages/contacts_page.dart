@@ -69,11 +69,9 @@ class _ContactTile extends StatelessWidget {
       },
       child: ListTile(
         leading: Avatar.small(url: user.image),
-        title: Text(user.name,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color.fromARGB(255, 115, 113, 113),
-            )),
+        title: Text(
+          user.name,
+        ),
       ),
     );
   }

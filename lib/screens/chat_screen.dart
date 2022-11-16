@@ -6,8 +6,6 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:fluchat/app.dart';
 import 'package:fluchat/helpers.dart';
 import 'package:fluchat/theme.dart';
-import 'package:fluchat/widgets/display_error_msg.dart';
-import 'package:fluchat/widgets/glowing_action_button.dart';
 import 'package:fluchat/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,10 +60,10 @@ class _ChatScreenState extends State<ChatScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: Theme.of(context).iconTheme,
-          centerTitle: false,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          // iconTheme: Theme.of(context).iconTheme,
+          // centerTitle: false,
+          // backgroundColor: Colors.transparent,
+          // elevation: 0,
           leadingWidth: 54,
           leading: Align(
             alignment: Alignment.centerRight,
