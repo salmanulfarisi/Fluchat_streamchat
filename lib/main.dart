@@ -5,34 +5,43 @@ import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter_core/stream_chat_flutter_core.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final client = StreamChatClient(
     streamKey,
-    logLevel: Level.INFO,
+    // logLevel: Level.INFO,
   );
   runApp(
     MyApp(
       client: client,
+      appTheme: AppTheme(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
   final StreamChatClient client;
-  const MyApp({Key? key, required this.client}) : super(key: key);
+  final AppTheme appTheme;
+  const MyApp({Key? key, required this.client, required this.appTheme})
+      : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: appTheme.light,
+      darkTheme: appTheme.dark,
       themeMode: ThemeMode.dark,
       title: 'Chatter',
       builder: (context, child) {
         return StreamChatCore(
           client: client,
-          child: child!,
+          child: ChannelsBloc(
+            child: UsersBloc(
+              child: child!,
+            ),
+          ),
         );
       },
       home: const SelectUserScreen(),

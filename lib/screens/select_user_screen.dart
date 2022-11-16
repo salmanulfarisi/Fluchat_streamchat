@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:fluchat/models/demo_users.dart';
 import 'package:fluchat/screens/screen.dart';
 import 'package:fluchat/widgets/widgets.dart';

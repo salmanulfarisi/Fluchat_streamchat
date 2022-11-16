@@ -3,7 +3,6 @@ import 'package:fluchat/pages/calls_page.dart';
 import 'package:fluchat/pages/contacts_page.dart';
 import 'package:fluchat/pages/messages_page.dart';
 import 'package:fluchat/pages/notification_page.dart';
-import 'package:fluchat/screens/profile_screen.dart';
 import 'package:fluchat/screens/screen.dart';
 import 'package:fluchat/theme.dart';
 import 'package:fluchat/widgets/glowing_action_button.dart';
@@ -14,23 +13,25 @@ import 'package:flutter/material.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
-  final ValueNotifier<int> pageIndex = ValueNotifier<int>(0);
+  final ValueNotifier<int> pageIndex = ValueNotifier(0);
   final ValueNotifier<String> title = ValueNotifier('Messages');
 
-  final pages = [
-    const MessagesPage(),
-    const NotificationPage(),
-    const CallsPage(),
-    const ContactPage(),
+  final pages = const [
+    MessagesPage(),
+    NotificationPage(),
+    CallsPage(),
+    ContactsPage(),
   ];
-  final pageTitle = [
+
+  final pageTitles = const [
     'Messages',
-    'Notification',
+    'Notifications',
     'Calls',
-    'Contact',
+    'Contacts',
   ];
-  void onNavigationItemSelected(index) {
-    title.value = pageTitle[index];
+
+  void _onNavigationItemSelected(index) {
+    title.value = pageTitles[index];
     pageIndex.value = index;
   }
 
@@ -39,17 +40,16 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: Theme.of(context).iconTheme,
-        backgroundColor: const Color(0xFF1B1E1F),
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: true,
         title: ValueListenableBuilder(
           valueListenable: title,
-          builder: (context, String value, _) {
+          builder: (BuildContext context, String value, _) {
             return Text(
               value,
               style: const TextStyle(
-                fontSize: 16,
                 fontWeight: FontWeight.bold,
+                fontSize: 17,
               ),
             );
           },
@@ -59,7 +59,9 @@ class HomeScreen extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: IconBackground(
             icon: Icons.search,
-            onTap: () {},
+            onTap: () {
+              print('TODO search');
+            },
           ),
         ),
         actions: [
@@ -79,30 +81,32 @@ class HomeScreen extends StatelessWidget {
       ),
       body: ValueListenableBuilder(
         valueListenable: pageIndex,
-        builder: (context, int value, _) {
+        builder: (BuildContext context, int value, _) {
           return pages[value];
         },
       ),
       bottomNavigationBar: _BottomNavigationBar(
-        onItemSelected: onNavigationItemSelected,
+        onItemSelected: _onNavigationItemSelected,
       ),
     );
   }
 }
 
 class _BottomNavigationBar extends StatefulWidget {
-  final ValueChanged<int> onItemSelected;
   const _BottomNavigationBar({
     Key? key,
     required this.onItemSelected,
   }) : super(key: key);
 
+  final ValueChanged<int> onItemSelected;
+
   @override
-  State<_BottomNavigationBar> createState() => _BottomNavigationBarState();
+  __BottomNavigationBarState createState() => __BottomNavigationBarState();
 }
 
-class _BottomNavigationBarState extends State<_BottomNavigationBar> {
+class __BottomNavigationBarState extends State<_BottomNavigationBar> {
   var selectedIndex = 0;
+
   void handleItemSelected(int index) {
     setState(() {
       selectedIndex = index;
@@ -112,29 +116,31 @@ class _BottomNavigationBarState extends State<_BottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     return Card(
+      color: (brightness == Brightness.light) ? Colors.transparent : null,
+      elevation: 0,
       margin: const EdgeInsets.all(0),
       child: SafeArea(
         top: false,
-        bottom: false,
+        bottom: true,
         child: Padding(
-          padding:
-              const EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 16),
+          padding: const EdgeInsets.only(top: 16, left: 8, right: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              NavigationBarItem(
-                icon: CupertinoIcons.bubble_left_bubble_right_fill,
-                lable: 'Messages',
+              _NavigationBarItem(
                 index: 0,
-                isSelected: selectedIndex == 0,
+                lable: 'Messages',
+                icon: CupertinoIcons.bubble_left_bubble_right_fill,
+                isSelected: (selectedIndex == 0),
                 onTap: handleItemSelected,
               ),
-              NavigationBarItem(
+              _NavigationBarItem(
                 index: 1,
-                lable: 'Notification',
+                lable: 'Notifications',
                 icon: CupertinoIcons.bell_solid,
-                isSelected: selectedIndex == 1,
+                isSelected: (selectedIndex == 1),
                 onTap: handleItemSelected,
               ),
               Padding(
@@ -142,21 +148,31 @@ class _BottomNavigationBarState extends State<_BottomNavigationBar> {
                 child: GlowingActionButton(
                   color: AppColors.secondary,
                   icon: CupertinoIcons.add,
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => const Dialog(
+                        child: AspectRatio(
+                          aspectRatio: 8 / 7,
+                          child: ContactsPage(),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              NavigationBarItem(
+              _NavigationBarItem(
                 index: 2,
                 lable: 'Calls',
                 icon: CupertinoIcons.phone_fill,
-                isSelected: selectedIndex == 2,
+                isSelected: (selectedIndex == 2),
                 onTap: handleItemSelected,
               ),
-              NavigationBarItem(
+              _NavigationBarItem(
                 index: 3,
+                lable: 'Contacts',
                 icon: CupertinoIcons.person_2_fill,
-                lable: 'Contacsts',
-                isSelected: selectedIndex == 3,
+                isSelected: (selectedIndex == 3),
                 onTap: handleItemSelected,
               ),
             ],
@@ -167,20 +183,21 @@ class _BottomNavigationBarState extends State<_BottomNavigationBar> {
   }
 }
 
-class NavigationBarItem extends StatelessWidget {
+class _NavigationBarItem extends StatelessWidget {
+  const _NavigationBarItem({
+    Key? key,
+    required this.index,
+    required this.lable,
+    required this.icon,
+    this.isSelected = false,
+    required this.onTap,
+  }) : super(key: key);
+
+  final int index;
   final String lable;
   final IconData icon;
-  final int index;
   final bool isSelected;
   final ValueChanged<int> onTap;
-  const NavigationBarItem(
-      {Key? key,
-      required this.lable,
-      required this.icon,
-      required this.index,
-      this.isSelected = false,
-      required this.onTap})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -196,11 +213,11 @@ class NavigationBarItem extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 20,
+              size: 22,
               color: isSelected ? AppColors.secondary : null,
             ),
             const SizedBox(
-              height: 5,
+              height: 8,
             ),
             Text(
               lable,
@@ -210,7 +227,7 @@ class NavigationBarItem extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: AppColors.secondary,
                     )
-                  : const TextStyle(fontSize: 10),
+                  : const TextStyle(fontSize: 11),
             ),
           ],
         ),
