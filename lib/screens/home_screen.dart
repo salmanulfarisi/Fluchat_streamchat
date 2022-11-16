@@ -1,8 +1,10 @@
-import 'package:fluchat/helpers.dart';
+import 'package:fluchat/app.dart';
 import 'package:fluchat/pages/calls_page.dart';
 import 'package:fluchat/pages/contacts_page.dart';
 import 'package:fluchat/pages/messages_page.dart';
 import 'package:fluchat/pages/notification_page.dart';
+import 'package:fluchat/screens/profile_screen.dart';
+import 'package:fluchat/screens/screen.dart';
 import 'package:fluchat/theme.dart';
 import 'package:fluchat/widgets/glowing_action_button.dart';
 import 'package:fluchat/widgets/widgets.dart';
@@ -63,8 +65,14 @@ class HomeScreen extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 24.0),
-            child: Avatar.small(
-              url: Helpers.randomPictureUrl(),
+            child: Hero(
+              tag: 'hero-profile-picture',
+              child: Avatar.small(
+                url: context.currentUserImage,
+                onTap: () {
+                  Navigator.of(context).push(ProfileScreen.route);
+                },
+              ),
             ),
           ),
         ],
